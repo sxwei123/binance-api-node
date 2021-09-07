@@ -96,8 +96,12 @@ Following examples will use the `await` form, which requires some configuration 
   - [assetDetail](#assetDetail)
   - [getBnbBurn](#getBnbBurn)
   - [setBnbBurn](#setBnbBurn)
+  - [dustLog](#dustlog)
   - [dustTransfer](#dustTransfer)
   - [accountCoins](#accountCoins)
+  - [lendingAccount](#lendingAccount)
+  - [fundingWallet](#fundingWallet)
+  - [apiPermission](#apiPermission)
 - [Margin](#margin)
   - [marginAccountInfo](#marginAccountInfo)
   - [marginLoan](#marginLoan)
@@ -1901,7 +1905,6 @@ console.log(await client.capitalConfigs())
 
 </details>
 
-
 #### universalTransfer
 
 You need to enable Permits Universal Transfer option for the api key which requests this endpoint.
@@ -2054,6 +2057,80 @@ console.log(await client.setBnbBurn({ spotBNBBurn: "true" }))
 
 </details>
 
+#### dustLog
+
+```js
+console.log(await client.dustLog())
+```
+
+| Param      | Type     | Required | Description         |
+| ---------- | -------- | -------- | ------------------- |
+| startTime  | Number   | false    |
+| endTime    | Number   | false    |
+| recvWindow | Number   | false    |
+
+<details>
+<summary>Output</summary>
+
+```js
+{
+        "total": 8,   //Total counts of exchange
+        "userAssetDribblets": [
+            {
+                "operateTime": 1615985535000,
+                "totalTransferedAmount": "0.00132256",
+                "totalServiceChargeAmount": "0.00002699",
+                "transId": 45178372831,
+                "userAssetDribbletDetails": [
+                    {
+                        "transId": 4359321,
+                        "serviceChargeAmount": "0.000009",
+                        "amount": "0.0009",
+                        "operateTime": 1615985535000,
+                        "transferedAmount": "0.000441",
+                        "fromAsset": "USDT"
+                    },
+                    {
+                        "transId": 4359321,
+                        "serviceChargeAmount": "0.00001799",
+                        "amount": "0.0009",
+                        "operateTime": 1615985535000,
+                        "transferedAmount": "0.00088156",
+                        "fromAsset": "ETH"
+                    }
+                ]
+            },
+            {
+                "operateTime":1616203180000,
+                "totalTransferedAmount": "0.00058795",
+                "totalServiceChargeAmount": "0.000012",
+                "transId": 4357015,
+                "userAssetDribbletDetails": [
+                    {
+                        "transId": 4357015,
+                        "serviceChargeAmount": "0.00001",
+                        "amount": "0.001",
+                        "operateTime": 1616203180000,
+                        "transferedAmount": "0.00049",
+                        "fromAsset": "USDT"
+                    },
+                    {
+                        "transId": 4357015,
+                        "serviceChargeAmount": "0.000002",
+                        "amount": "0.0001",
+                        "operateTime": 1616203180000,
+                        "transferedAmount": "0.00009795",
+                        "fromAsset": "ETH"
+                    }
+                ]
+            }
+        ]
+    }
+}
+```
+
+</details>
+
 #### dustTransfer
 
 ```js
@@ -2175,6 +2252,108 @@ console.log(await client.accountCoins())
         "withdrawing": "0.00000000"
     }
 ]
+```
+
+</details>
+
+#### lendingAccount
+
+Get information of lending assets for user.
+
+```js
+console.log(await client.lendingAccount())
+```
+
+<details>
+<summary>Output</summary>
+
+```js
+{
+    "positionAmountVos": [
+        {
+            "amount": "75.46000000",
+            "amountInBTC": "0.01044819",
+            "amountInUSDT": "75.46000000",
+            "asset": "USDT"
+        },
+        {
+            "amount": "1.67072036",
+            "amountInBTC": "0.00023163",
+            "amountInUSDT": "1.67289230",
+            "asset": "BUSD"
+        }
+    ],
+    "totalAmountInBTC": "0.01067982",
+    "totalAmountInUSDT": "77.13289230",
+    "totalFixedAmountInBTC": "0.00000000",
+    "totalFixedAmountInUSDT": "0.00000000",
+    "totalFlexibleInBTC": "0.01067982",
+    "totalFlexibleInUSDT": "77.13289230"
+ }
+```
+
+</details>
+
+#### fundingWallet
+
+Query funding wallet, includes Binance Pay, Binance Card, Binance Gift Card, Stock Token.
+
+```js
+console.log(await client.fundingWallet())
+```
+
+| Param      | Type     | Required | Description         |
+| ---------- | -------- | -------- | ------------------- |
+| asset      | String   | false    |
+| needBtcValuation      | String   | false    | 'true' or 'false'
+
+<details>
+<summary>Output</summary>
+
+```js
+[
+    {
+        "asset": "USDT",
+        "free": "1",
+        "locked": "0",
+        "freeze": "0",
+        "withdrawing": "0",  
+        "btcValuation": "0.00000091"  
+    }
+]
+```
+
+</details>
+
+#### apiPermission
+
+Get API Key Permission.
+
+```js
+console.log(await client.apiPermission())
+```
+
+| Param      | Type     | Required | Description         |
+| ---------- | -------- | -------- | ------------------- |
+| recvWindow      | Number   | false    |
+
+<details>
+<summary>Output</summary>
+
+```js
+{
+   "ipRestrict": false,
+   "createTime": 1623840271000,   
+   "enableWithdrawals": false,   // This option allows you to withdraw via API. You must apply the IP Access Restriction filter in order to withdrawals
+   "enableInternalTransfer": true,  // This option authorizes this key to transfer funds between your master account and your sub account instantly
+   "permitsUniversalTransfer": true,  // Authorizes this key to be used for a dedicated universal transfer API to transfer multiple supported currencies. Each business's own transfer API rights are not affected by this authorization
+   "enableVanillaOptions": false,  //  Authorizes this key to Vanilla options trading
+   "enableReading": true,
+   "enableFutures": false,  //  API Key created before your futures account opened does not support futures API service
+   "enableMargin": false,   //  This option can be adjusted after the Cross Margin account transfer is completed
+   "enableSpotAndMarginTrading": false, // Spot and margin trading
+   "tradingAuthorityExpirationTime": 1628985600000  // Expiration time for spot and margin trading permission
+}
 ```
 
 </details>

@@ -364,6 +364,7 @@ export default opts => {
     universalTransfer: payload => privCall('/sapi/v1/asset/transfer', payload, 'POST'),
     universalTransferHistory: payload => privCall('/sapi/v1/asset/transfer', payload),
 
+    dustLog: payload => privCall('/sapi/v1/asset/dribblet', payload),
     dustTransfer: payload => privCall('/sapi/v1/asset/dust', payload, 'POST'),
     accountCoins: payload => privCall('/sapi/v1/capital/config/getall', payload),
 
@@ -446,5 +447,8 @@ export default opts => {
     futuresPositionMargin: payload => privCall('/fapi/v1/positionMargin', payload, 'POST'),
     futuresMarginHistory: payload => privCall('/fapi/v1/positionMargin/history', payload),
     futuresIncome: payload => privCall('/fapi/v1/income', payload),
+    lendingAccount: payload => privCall('/sapi/v1/lending/union/account', payload),
+    fundingWallet: payload => privCall('/sapi/v1/asset/get-funding-asset', payload, 'POST'),
+    apiPermission: payload => privCall('/sapi/v1/account/apiRestrictions', payload),
   }
 }
